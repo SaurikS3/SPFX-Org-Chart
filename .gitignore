@@ -1,10 +1,21 @@
-npm-cache/
+# Node modules folders (use the .zip files instead for offline installation)
 node_modules/
+!**/node_modules.zip
+
+# NPM cache (too large, not needed for offline install)
+npm-cache/
+
+# macOS files
 .DS_Store
+
+# Log files
 *.log
+
+# Build outputs
 dist/
 lib/
+lib-commonjs/
 temp/
+release/
 sharepoint/
 *.sppkg
-global-packages/node_modules/

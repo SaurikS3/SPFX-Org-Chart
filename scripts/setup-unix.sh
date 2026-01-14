@@ -37,7 +37,7 @@ echo "Detected OS: $OS_TYPE"
 echo ""
 
 # Step 1: Check/Install Node.js
-echo "[Step 1/5] Checking Node.js installation..."
+echo "[Step 1/6] Checking Node.js installation..."
 if command -v node &> /dev/null; then
     NODE_VERSION=$(node --version)
     echo "Node.js is already installed: $NODE_VERSION"
@@ -73,36 +73,63 @@ echo "Node.js version: $(node --version)"
 echo "npm version: $(npm --version)"
 echo ""
 
-# Step 2: Configure npm to use local cache
-echo "[Step 2/5] Configuring npm to use local cache..."
-npm config set cache "$ROOT_DIR/npm-cache"
-npm config set offline true
-npm config set prefer-offline true
-echo "npm cache configured to: $ROOT_DIR/npm-cache"
-echo ""
-
-# Step 3: Install global packages
-echo "[Step 3/5] Installing global npm packages..."
-echo "Installing yo, gulp-cli, and @microsoft/generator-sharepoint..."
-
-# Try to install globally, or use local if permission denied
-if npm install -g yo gulp-cli @microsoft/generator-sharepoint --cache "$ROOT_DIR/npm-cache" --offline 2>/dev/null; then
-    echo "Global packages installed successfully!"
+# Step 2: Extract global-packages node_modules
+echo "[Step 2/6] Extracting global packages dependencies..."
+if [ ! -d "$ROOT_DIR/global-packages/node_modules" ]; then
+    cd "$ROOT_DIR/global-packages"
+    if [ -f "node_modules.zip" ]; then
+        echo "Extracting global-packages/node_modules.zip..."
+        unzip -q node_modules.zip
+        echo "Global packages dependencies extracted."
+    else
+        echo "Warning: node_modules.zip not found in global-packages."
+    fi
 else
-    echo "Global install failed (likely permission issue). Using npm prefix instead..."
-    NPM_PREFIX="$HOME/.npm-global"
-    mkdir -p "$NPM_PREFIX"
-    npm config set prefix "$NPM_PREFIX"
-    npm install -g yo gulp-cli @microsoft/generator-sharepoint --cache "$ROOT_DIR/npm-cache" --offline
-    echo ""
-    echo "Add the following to your ~/.bashrc or ~/.zshrc:"
-    echo "  export PATH=\"$NPM_PREFIX/bin:\$PATH\""
-    echo ""
+    echo "Global packages dependencies already extracted."
 fi
 echo ""
 
-# Step 4: Verify installation
-echo "[Step 4/5] Verifying installation..."
+# Step 3: Extract sample-project node_modules
+echo "[Step 3/6] Extracting sample project dependencies..."
+if [ ! -d "$ROOT_DIR/sample-project/sample-spfx/node_modules" ]; then
+    cd "$ROOT_DIR/sample-project/sample-spfx"
+    
+    # Check if split files exist and combine them
+    if [ -f "node_modules.zip.part_aa" ]; then
+        echo "Combining split zip files..."
+        cat node_modules.zip.part_* > node_modules.zip
+        echo "Combined successfully."
+    fi
+    
+    if [ -f "node_modules.zip" ]; then
+        echo "Extracting sample-project/sample-spfx/node_modules.zip..."
+        unzip -q node_modules.zip
+        echo "Sample project dependencies extracted."
+    else
+        echo "Warning: node_modules.zip not found in sample-project/sample-spfx."
+    fi
+else
+    echo "Sample project dependencies already extracted."
+fi
+echo ""
+
+# Step 4: Install global packages from tgz files
+echo "[Step 4/6] Installing global SPFx development tools..."
+cd "$ROOT_DIR/global-packages"
+
+echo "Installing Yeoman (yo)..."
+npm install -g yo-6.0.0.tgz 2>/dev/null || npm install -g yo-6.0.0.tgz --offline || true
+
+echo "Installing Gulp CLI..."
+npm install -g gulp-cli-3.1.0.tgz 2>/dev/null || npm install -g gulp-cli-3.1.0.tgz --offline || true
+
+echo "Installing SharePoint Generator..."
+npm install -g microsoft-generator-sharepoint-1.22.1.tgz 2>/dev/null || npm install -g microsoft-generator-sharepoint-1.22.1.tgz --offline || true
+
+echo ""
+
+# Step 5: Verify installation
+echo "[Step 5/6] Verifying installation..."
 echo ""
 echo "Node.js version:"
 node --version
@@ -127,29 +154,32 @@ else
 fi
 echo ""
 
-# Step 5: Create .npmrc in user home
-echo "[Step 5/5] Creating user .npmrc for offline mode..."
-cat > "$HOME/.npmrc" << EOF
-cache=$ROOT_DIR/npm-cache
-offline=true
-prefer-offline=true
-EOF
-echo "Created $HOME/.npmrc"
+# Step 6: Configure npm for offline mode
+echo "[Step 6/6] Configuring npm for offline mode..."
+npm config set cache "$ROOT_DIR/npm-cache" 2>/dev/null || true
+npm config set prefer-offline true 2>/dev/null || true
+echo "npm configured for offline usage."
 echo ""
 
 echo "========================================"
 echo "Setup Complete!"
 echo "========================================"
 echo ""
-echo "You can now create new SPFx projects using:"
+echo "Installed tools:"
+echo "  - Yeoman (yo): For scaffolding projects"
+echo "  - Gulp CLI: For running build tasks"
+echo "  - SharePoint Generator: For creating SPFx projects"
+echo ""
+echo "To verify installation, run:"
+echo "  yo --version"
+echo "  gulp --version"
+echo ""
+echo "To work with the sample SPFx project:"
+echo "  cd $ROOT_DIR/sample-project/sample-spfx"
+echo "  gulp serve"
+echo ""
+echo "To create a new SPFx project:"
+echo "  mkdir my-new-project"
+echo "  cd my-new-project"
 echo "  yo @microsoft/sharepoint"
-echo ""
-echo "All npm packages are cached locally in:"
-echo "  $ROOT_DIR/npm-cache"
-echo ""
-echo "For any new project, run npm install with:"
-echo "  npm install --offline --cache \"$ROOT_DIR/npm-cache\""
-echo ""
-echo "Sample project available at:"
-echo "  $ROOT_DIR/sample-project/sample-spfx"
 echo ""

@@ -1,121 +1,194 @@
-# SPFx Offline Development Environment for macOS
+# SPFx Org Chart - Complete Offline Development Environment
 
-Complete, pre-packaged SharePoint Framework (SPFx) development environment for **air-gapped/lockdown macOS environments** where internet access is not available.
+A complete offline SharePoint Framework (SPFx) development environment with an Org Chart web part sample project. This repository includes everything needed to set up SPFx development without internet access.
 
-## 📦 Contents
+## 📦 What's Included
 
-| Directory | Description |
-|-----------|-------------|
-| `node-installers/` | Node.js v18.20.5 (Intel & Apple Silicon) |
-| `npm-cache/` | Pre-populated npm cache (~787MB) |
-| `global-packages/` | yo, gulp-cli, @microsoft/generator-sharepoint |
-| `sample-project/` | Sample SPFx React WebPart (dependencies installed) |
-| `scripts/` | Setup script for macOS |
+### Node.js Installers
+Located in `node-installers/`:
+- **Windows**: `node-v18.20.5-x64.msi` (recommended) or `node-v18.20.5-win-x64.zip`
+- **macOS Intel**: `node-v18.20.5-darwin-x64.tar.gz`
+- **macOS Apple Silicon**: `node-v18.20.5-darwin-arm64.tar.gz`
+
+### Global SPFx Packages
+Located in `global-packages/`:
+- `yo-6.0.0.tgz` - Yeoman scaffolding tool
+- `gulp-cli-3.1.0.tgz` - Gulp task runner CLI
+- `microsoft-generator-sharepoint-1.22.1.tgz` - SharePoint Framework generator
+- `node_modules.zip` - Pre-installed dependencies for global packages
+
+### Sample SPFx Project
+Located in `sample-project/sample-spfx/`:
+- Complete SPFx Org Chart web part using Microsoft Graph API
+- `node_modules.zip` - All project dependencies pre-installed
+- Ready to build and deploy
 
 ## 🚀 Quick Start
 
-```bash
-# 1. Make setup script executable
-chmod +x scripts/setup-unix.sh
+### Windows
 
-# 2. Run setup
-./scripts/setup-unix.sh
+1. **Install Node.js 18.x**
+   - Run `node-installers/node-v18.20.5-x64.msi`
+   - Follow the installation wizard
+
+2. **Run Setup Script**
+   ```cmd
+   scripts\setup-windows.bat
+   ```
+
+3. **Work with Sample Project**
+   ```cmd
+   cd sample-project\sample-spfx
+   gulp serve
+   ```
+
+### macOS / Linux
+
+1. **Install Node.js 18.x**
+   ```bash
+   # For Apple Silicon (M1/M2/M3)
+   tar -xzf node-installers/node-v18.20.5-darwin-arm64.tar.gz
+   export PATH=$PWD/node-v18.20.5-darwin-arm64/bin:$PATH
+   
+   # For Intel Mac
+   tar -xzf node-installers/node-v18.20.5-darwin-x64.tar.gz
+   export PATH=$PWD/node-v18.20.5-darwin-x64/bin:$PATH
+   ```
+
+2. **Run Setup Script**
+   ```bash
+   chmod +x scripts/setup-unix.sh
+   ./scripts/setup-unix.sh
+   ```
+
+3. **Work with Sample Project**
+   ```bash
+   cd sample-project/sample-spfx
+   gulp serve
+   ```
+
+## 📁 Project Structure
+
+```
+SPFX-Org-Chart/
+├── README.md
+├── .gitignore
+├── .gitattributes              # Git LFS configuration
+├── node-installers/            # Node.js installers for all platforms
+│   ├── node-v18.20.5-x64.msi           # Windows MSI installer
+│   ├── node-v18.20.5-win-x64.zip       # Windows portable
+│   ├── node-v18.20.5-darwin-x64.tar.gz # macOS Intel
+│   └── node-v18.20.5-darwin-arm64.tar.gz # macOS Apple Silicon
+├── global-packages/            # Global npm packages
+│   ├── yo-6.0.0.tgz
+│   ├── gulp-cli-3.1.0.tgz
+│   ├── microsoft-generator-sharepoint-1.22.1.tgz
+│   ├── node_modules.zip        # Dependencies (extract before use)
+│   └── package.json
+├── sample-project/
+│   └── sample-spfx/            # Sample SPFx Org Chart project
+│       ├── src/                # Source code
+│       ├── config/             # SPFx configuration
+│       ├── node_modules.zip.part_aa  # Dependencies part 1 (combine before extract)
+│       ├── node_modules.zip.part_ab  # Dependencies part 2
+│       ├── package.json
+│       └── ...
+└── scripts/
+    ├── setup-windows.bat       # Windows setup script
+    └── setup-unix.sh           # macOS/Linux setup script
 ```
 
-## 🔧 Manual Setup
+## 🔧 Manual Installation
 
-### 1. Install Node.js v18.20.5
+If the setup scripts don't work, you can manually install:
 
-Extract the appropriate package from `node-installers/`:
+### 1. Extract Dependencies
 
-**Apple Silicon (M1/M2/M3/M4):**
-```bash
-cd node-installers
-tar -xzf node-v18.20.5-darwin-arm64.tar.gz
-export PATH="$(pwd)/node-v18.20.5-darwin-arm64/bin:$PATH"
+**Windows (PowerShell):**
+```powershell
+cd global-packages
+Expand-Archive -Path node_modules.zip -DestinationPath .
+
+cd ..\sample-project\sample-spfx
+Expand-Archive -Path node_modules.zip -DestinationPath .
 ```
 
-**Intel Mac:**
+**macOS/Linux:**
 ```bash
-cd node-installers
-tar -xzf node-v18.20.5-darwin-x64.tar.gz
-export PATH="$(pwd)/node-v18.20.5-darwin-x64/bin:$PATH"
+cd global-packages
+unzip node_modules.zip
+
+cd ../sample-project/sample-spfx
+unzip node_modules.zip
 ```
 
-Add to `~/.zshrc` for persistence:
-```bash
-echo 'export PATH="/path/to/node-v18.20.5-darwin-xxx/bin:$PATH"' >> ~/.zshrc
-```
-
-### 2. Configure npm for Offline Mode
+### 2. Install Global Packages
 
 ```bash
-npm config set cache "/path/to/SFPX-ENV/npm-cache"
-npm config set offline true
-npm config set prefer-offline true
+cd global-packages
+npm install -g yo-6.0.0.tgz
+npm install -g gulp-cli-3.1.0.tgz
+npm install -g microsoft-generator-sharepoint-1.22.1.tgz
 ```
 
-### 3. Install Global Packages
+## 📋 Sample Org Chart Web Part
 
-```bash
-npm install -g yo gulp-cli @microsoft/generator-sharepoint --offline
-```
+The included sample project is an Org Chart web part that:
+- Fetches organization data from Microsoft Graph API
+- Displays hierarchical org chart visualization
+- Shows user photos, names, and job titles
+- Supports drilling into manager/direct reports
 
-### 4. Verify Installation
+### Configuration
 
-```bash
-node --version    # v18.20.5
-npm --version     # 10.x.x
-yo --version
-gulp --version
-```
+The web part requires the following Microsoft Graph API permissions:
+- `User.Read.All` - To read user profiles
+- `People.Read` - To read organizational relationships
 
-## 📝 Creating New SPFx Projects
-
-```bash
-# Create and enter project directory
-mkdir my-webpart && cd my-webpart
-
-# Run SPFx generator
-yo @microsoft/sharepoint
-
-# Install dependencies (offline)
-npm install --offline
-```
-
-## 🏗️ Build Commands
-
-```bash
-gulp build                    # Build project
-gulp bundle --ship            # Bundle for production
-gulp package-solution --ship  # Create .sppkg package
-gulp serve                    # Local development server
-```
-
-## 📁 Sample Project
-
-Pre-configured React WebPart at `sample-project/sample-spfx/`:
+### Building for Production
 
 ```bash
 cd sample-project/sample-spfx
-gulp build
-gulp serve
+gulp bundle --ship
+gulp package-solution --ship
 ```
 
-## ⚠️ SPFx 1.22.1 Requirements
+The `.sppkg` package will be in `sharepoint/solution/`.
 
-| Component | Version |
-|-----------|---------|
-| Node.js | 18.x LTS |
-| npm | 9.x - 10.x |
-| TypeScript | 4.7+ |
-| SharePoint | Online only |
+## 📝 Creating a New SPFx Project
 
-## 🔒 Offline Notes
+After running the setup script, you can create new SPFx projects:
 
-All packages required for SPFx development are cached. For additional packages not in cache, you'll need to pre-cache them on a connected machine first.
+```bash
+mkdir my-new-webpart
+cd my-new-webpart
+yo @microsoft/sharepoint
+```
 
-## 📚 References
+Follow the prompts to scaffold your project.
 
-- [SPFx Compatibility](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/compatibility)
-- [SPFx Development Setup](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-development-environment)
+## ⚠️ Requirements
+
+- **Node.js**: v18.x (included in this package)
+- **Disk Space**: ~500MB for installation
+- **Operating System**: Windows 10+, macOS 10.14+, or Linux
+
+## 🔄 Updating Dependencies
+
+If you need to update the offline packages in the future:
+
+```bash
+# Update global packages
+npm pack yo@latest
+npm pack gulp-cli@latest
+npm pack @microsoft/generator-sharepoint@latest
+
+# Update project dependencies
+cd sample-project/sample-spfx
+npm install
+zip -r node_modules.zip node_modules/
+```
+
+## 📄 License
+
+MIT License - Feel free to use and modify for your projects.
