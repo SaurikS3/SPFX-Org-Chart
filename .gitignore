@@ -1,0 +1,10 @@
+npm-cache/
+node_modules/
+.DS_Store
+*.log
+dist/
+lib/
+temp/
+sharepoint/
+*.sppkg
+global-packages/node_modules/

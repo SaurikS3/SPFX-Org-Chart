@@ -1,0 +1,23 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "whichFolder": "subdir",
+    "solutionName": "sample-spfx",
+    "useGulp": false,
+    "componentType": "webpart",
+    "template": "react",
+    "componentName": "SampleWebPart",
+    "componentDescription": "Sample WebPart",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.16.0",
+    "sdksVersions": {},
+    "version": "1.22.1",
+    "libraryName": "sample-spfx",
+    "libraryId": "4ae95c3f-9a87-4190-bdc5-67d34fd37be4",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionShortDescription": "sample-spfx description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false
+  }
+}

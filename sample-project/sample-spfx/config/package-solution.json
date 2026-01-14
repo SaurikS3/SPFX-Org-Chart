@@ -1,0 +1,50 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "org-chart-web-part-client-side-solution",
+    "id": "4ae95c3f-9a87-4190-bdc5-67d34fd37be4",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.22.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Organization Chart Web Part - Display hierarchical org structure from Microsoft Graph"
+      },
+      "longDescription": {
+        "default": "A SharePoint web part that displays an interactive organizational chart. Configure a root user (VP/Manager) email address and the chart will automatically load all direct reports recursively from Microsoft Graph. Features include search, expand/collapse, zoom, and profile photos."
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Organization Chart Web Part Feature",
+        "description": "Enables the Organization Chart web part that displays hierarchical org structure.",
+        "id": "4b588b3e-5c04-4074-8a73-c3aa191328b4",
+        "version": "1.0.0.0"
+      }
+    ],
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "User.Read.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "User.ReadBasic.All"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/org-chart-web-part.sppkg"
+  }
+}
